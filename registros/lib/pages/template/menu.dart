@@ -1,36 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/pages/portal_Norte/piscinas.dart';
+import 'package:flutter_application_1/pages/portal_Norte/dragflow.dart';
+import 'package:flutter_application_1/pages/portal_Norte/mudwizard.dart';
+import 'package:flutter_application_1/pages/portal_Norte/plantaTratamiento.dart';
+import 'package:flutter_application_1/pages/portal_Norte/polishing.dart';
+import 'package:flutter_application_1/pages/portal_Norte/tsf.dart';
+import 'package:flutter_application_1/pages/portal_Sur/ingreso.dart';
+import 'package:flutter_application_1/pages/portal_Sur/reactivos.dart';
+import 'package:flutter_application_1/pages/portal_Sur/agua_tratada.dart';
+import 'package:flutter_application_1/pages/portal_Sur/destino_final.dart';
 
-void main() => runApp(const MyApp());
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomePage(),
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class MenuPage extends StatelessWidget {
+  const MenuPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Menu'),
+        title: const Text('Menú'),
         backgroundColor: Colors.blue[800],
       ),
       drawer: Drawer(
         child: Container(
-          color: Colors.blue[800], // Fondo azul para toda la parte superior
+          color: Colors.blue[800],
           child: Stack(
             children: [
-              // Contenido desplazado hacia abajo
               Padding(
                 padding: const EdgeInsets.only(top: 40),
                 child: ListView(
@@ -39,9 +34,9 @@ class HomePage extends StatelessWidget {
                     UserAccountsDrawerHeader(
                       accountName: const Text("Administrador"),
                       accountEmail: const Text("admin@escuela.com"),
-                      currentAccountPicture: CircleAvatar(
-                        backgroundColor: const Color.fromARGB(255, 249, 199, 0),
-                        child: const Icon(
+                      currentAccountPicture: const CircleAvatar(
+                        backgroundColor: Color.fromARGB(255, 249, 199, 0),
+                        child: Icon(
                           Icons.person,
                           size: 40,
                           color: Colors.black,
@@ -49,10 +44,7 @@ class HomePage extends StatelessWidget {
                       ),
                       decoration: BoxDecoration(color: Colors.blue[800]),
                     ),
-
-                    // PORTAL NORTE
                     ExpansionTile(
-                      initiallyExpanded: false,
                       title: const Text(
                         "TRATAMIENTO DE AGUAS - PORTAL NORTE",
                         style: TextStyle(
@@ -64,51 +56,7 @@ class HomePage extends StatelessWidget {
                       ),
                       children: [
                         ListTile(
-                          title: Text(
-                            'Planta Tratamiento de Agua',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          onTap: () => Navigator.pop(context),
-                        ),
-                        ListTile(
-                          title: Text(
-                            'TSF',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          onTap: () => Navigator.pop(context),
-                        ),
-                        ListTile(
-                          title: Text(
-                            'MUDWIZARD',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          onTap: () => Navigator.pop(context),
-                        ),
-                        ListTile(
-                          title: Text(
-                            'DRAGFLOW',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          onTap: () => Navigator.pop(context),
-                        ),
-                        ListTile(
-                          title: Text(
+                          title: const Text(
                             'Piscinas',
                             style: TextStyle(
                               color: Colors.white,
@@ -116,30 +64,108 @@ class HomePage extends StatelessWidget {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          onTap: () => Navigator.pop(context),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const PiscinasPage(),
+                              ),
+                            );
+                          },
                         ),
                         ListTile(
-                          title: Text(
-                            'POLISHING POND',
+                          title: const Text(
+                            'Dragflow',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 10,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          onTap: () => Navigator.pop(context),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const DragflowPage(),
+                              ),
+                            );
+                          },
+                        ),
+                        ListTile(
+                          title: const Text(
+                            'MudWizard',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const MudwizardPage(),
+                              ),
+                            );
+                          },
+                        ),
+                        ListTile(
+                          title: const Text(
+                            'Planta de Tratamiento',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => const PlantatratamientoPage(),
+                              ),
+                            );
+                          },
+                        ),
+                        ListTile(
+                          title: const Text(
+                            'Polishing',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const PolishingPage(),
+                              ),
+                            );
+                          },
+                        ),
+                        ListTile(
+                          title: const Text(
+                            'TSF',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const TSfgPage(),
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),
-
-                    Divider(
-                      thickness: 1,
-                      color: Colors.grey[300],
-                      indent: 16,
-                      endIndent: 16,
-                    ),
-
-                    // PORTAL SUR
                     ExpansionTile(
                       title: const Text(
                         "TRATAMIENTO DE AGUAS - PORTAL SUR",
@@ -152,29 +178,43 @@ class HomePage extends StatelessWidget {
                       ),
                       children: [
                         ListTile(
-                          title: Text(
-                            'Ingreso',
+                          title: const Text(
+                            'Ingresos',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 10,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          onTap: () => Navigator.pop(context),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const IngresosPage(),
+                              ),
+                            );
+                          },
                         ),
                         ListTile(
-                          title: Text(
-                            'Reactivos Utilizados',
+                          title: const Text(
+                            'Reactivos',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 10,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          onTap: () => Navigator.pop(context),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ReactivosPage(),
+                              ),
+                            );
+                          },
                         ),
                         ListTile(
-                          title: Text(
+                          title: const Text(
                             'Agua Tratada',
                             style: TextStyle(
                               color: Colors.white,
@@ -182,34 +222,121 @@ class HomePage extends StatelessWidget {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          onTap: () => Navigator.pop(context),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const AguaTPage(),
+                              ),
+                            );
+                          },
                         ),
                         ListTile(
-                          title: Text(
-                            'Destino final del Agua Tratada',
+                          title: const Text(
+                            'Destino Final Del Agua Tratada',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 10,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          onTap: () => Navigator.pop(context),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const DestinoFATPage(),
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),
-
                     const Divider(height: 1),
-
-                    ListTile(
-                      leading: const Icon(Icons.logout, color: Colors.red),
-                      title: const Text('Cerrar Sesión'),
-                      onTap: () => SystemNavigator.pop(),
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white10,
+                        border: Border.all(color: Colors.redAccent),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: ListTile(
+                        leading: const Icon(Icons.logout, color: Colors.red),
+                        title: const Text(
+                          'Cerrar Sesión',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                backgroundColor: Colors.blue[800], // fondo azul
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                title: const Text(
+                                  "¿Desea cerrar sesión?",
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                content: const Text(
+                                  "Se cerrará su sesión actual y volverá al inicio.",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                      backgroundColor: Colors.amber,
+                                      foregroundColor: Colors.black,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    child: const Text("No"),
+                                    onPressed:
+                                        () => Navigator.of(context).pop(),
+                                  ),
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                      backgroundColor: Colors.amber,
+                                      foregroundColor: Colors.black,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    child: const Text("Sí"),
+                                    onPressed: () {
+                                      Navigator.of(
+                                        context,
+                                      ).pop(); // cerrar diálogo
+                                      Navigator.of(context).pushAndRemoveUntil(
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) => const LoginPage(),
+                                        ),
+                                        (route) => false,
+                                      );
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                      ),
                     ),
                   ],
                 ),
               ),
-
-              // Botón "X" arriba a la izquierda
               Positioned(
                 top: 8,
                 left: 8,
@@ -221,6 +348,12 @@ class HomePage extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+      body: const Center(
+        child: Text(
+          'Selecciona una opción del menú',
+          style: TextStyle(fontSize: 18),
         ),
       ),
     );
