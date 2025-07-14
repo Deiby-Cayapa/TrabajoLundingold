@@ -20,6 +20,11 @@ button {
     font-size: 17px;
 }
 
+.formulario button{
+    width: 100%;
+    margin: 0;
+}
+
 .center{
     text-align: center;
     color: rgb(246, 209, 0);
