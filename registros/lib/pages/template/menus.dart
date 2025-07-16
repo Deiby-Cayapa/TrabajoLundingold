@@ -138,7 +138,7 @@ class AppMenuDrawer extends StatelessWidget {
                               title: const Text(
                                 "¿Desea cerrar sesión?",
                                 style: TextStyle(
-                                  color: Colors.red,
+                                  color: Color.fromARGB(255, 0, 126, 157),
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
                                 ),
