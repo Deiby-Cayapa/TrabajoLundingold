@@ -1,37 +1,62 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/usuario/newuser.dart';
 
-class CreateUserPage extends StatefulWidget {
-  const CreateUserPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<CreateUserPage> createState() => _CreateUserPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _CreateUserPageState extends State<CreateUserPage> {
+class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
-  bool _obscurePassword = true;
-  bool _isLoading = false; // Para controlar el estado de carga
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _userController = TextEditingController();
-  final _passController = TextEditingController();
+  final _passwordController = TextEditingController();
   final _emailController = TextEditingController();
+
+  bool _obscurePassword = true;
+
+  void _register() {
+    if (_formKey.currentState!.validate()) {
+      final success = AuthManager.registerUser(
+        firstName: _firstNameController.text.trim(),
+        lastName: _lastNameController.text.trim(),
+        user: _userController.text.trim(),
+        password: _passwordController.text.trim(),
+        email: _emailController.text.trim(),
+      );
+
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Usuario creado exitosamente')),
+        );
+        Navigator.pop(context);
+      } else {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('El usuario ya existe')));
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blue, // Fondo azul igual que login
       appBar: AppBar(
-        title: const Text('Crear Usuario'),
-        backgroundColor: Colors.blue,
+        title: const Text('Crear Cuenta'),
+        backgroundColor: Colors.blueAccent,
       ),
-      backgroundColor: Colors.blue,
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
           child: Container(
+            width: 350,
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: Colors.yellow,
+              color: Colors.yellow, // Fondo amarillo para el formulario
               borderRadius: BorderRadius.circular(20),
               boxShadow: const [
                 BoxShadow(
@@ -41,25 +66,27 @@ class _CreateUserPageState extends State<CreateUserPage> {
                 ),
               ],
             ),
-            width: 350,
             child: Form(
               key: _formKey,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.person_add, size: 60, color: Colors.blue),
+                  const Icon(
+                    Icons.person_add_alt_1,
+                    size: 60,
+                    color: Colors.blueAccent,
+                  ),
                   const SizedBox(height: 10),
                   const Text(
-                    'Registro',
+                    'Crear Cuenta',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 30),
-                  // Primer Nombre
                   TextFormField(
                     controller: _firstNameController,
                     decoration: InputDecoration(
-                      labelText: 'Primer Nombre',
-                      prefixIcon: const Icon(Icons.person_outline),
+                      labelText: 'Nombre',
+                      prefixIcon: const Icon(Icons.person),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -67,12 +94,11 @@ class _CreateUserPageState extends State<CreateUserPage> {
                     validator:
                         (value) => value!.isEmpty ? 'Ingrese su nombre' : null,
                   ),
-                  const SizedBox(height: 20),
-                  // Primer Apellido
+                  const SizedBox(height: 15),
                   TextFormField(
                     controller: _lastNameController,
                     decoration: InputDecoration(
-                      labelText: 'Primer Apellido',
+                      labelText: 'Apellido',
                       prefixIcon: const Icon(Icons.person_outline),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -82,13 +108,12 @@ class _CreateUserPageState extends State<CreateUserPage> {
                         (value) =>
                             value!.isEmpty ? 'Ingrese su apellido' : null,
                   ),
-                  const SizedBox(height: 20),
-                  // Usuario
+                  const SizedBox(height: 15),
                   TextFormField(
                     controller: _userController,
                     decoration: InputDecoration(
                       labelText: 'Usuario',
-                      prefixIcon: const Icon(Icons.person),
+                      prefixIcon: const Icon(Icons.account_circle),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -96,10 +121,9 @@ class _CreateUserPageState extends State<CreateUserPage> {
                     validator:
                         (value) => value!.isEmpty ? 'Ingrese un usuario' : null,
                   ),
-                  const SizedBox(height: 20),
-                  // Contraseña
+                  const SizedBox(height: 15),
                   TextFormField(
-                    controller: _passController,
+                    controller: _passwordController,
                     obscureText: _obscurePassword,
                     decoration: InputDecoration(
                       labelText: 'Contraseña',
@@ -110,10 +134,11 @@ class _CreateUserPageState extends State<CreateUserPage> {
                               ? Icons.visibility
                               : Icons.visibility_off,
                         ),
-                        onPressed:
-                            () => setState(
-                              () => _obscurePassword = !_obscurePassword,
-                            ),
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -123,88 +148,36 @@ class _CreateUserPageState extends State<CreateUserPage> {
                         (value) =>
                             value!.isEmpty ? 'Ingrese una contraseña' : null,
                   ),
-                  const SizedBox(height: 20),
-                  // Email
+                  const SizedBox(height: 15),
                   TextFormField(
                     controller: _emailController,
-                    keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
-                      labelText: 'Email',
+                      labelText: 'Correo electrónico',
                       prefixIcon: const Icon(Icons.email),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Ingrese su email';
-                      } else if (!value.contains('@')) {
-                        return 'Email no válido';
-                      }
-                      return null;
-                    },
+                    validator:
+                        (value) => value!.isEmpty ? 'Ingrese su correo' : null,
                   ),
                   const SizedBox(height: 30),
-                  // Botón de Registro - ¡AQUÍ ESTÁ EL BOTÓN IMPLEMENTADO!
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed:
-                          _isLoading
-                              ? null
-                              : () async {
-                                if (_formKey.currentState?.validate() ??
-                                    false) {
-                                  setState(() => _isLoading = true);
-                                  try {
-                                    // Simulamos un proceso de registro
-                                    await Future.delayed(
-                                      const Duration(seconds: 2),
-                                    );
-
-                                    // Aquí iría tu lógica real de registro:
-                                    // await AuthService.registrarUsuario(
-                                    //   _firstNameController.text,
-                                    //   _lastNameController.text,
-                                    //   _userController.text,
-                                    //   _passController.text,
-                                    //   _emailController.text,
-                                    // );
-
-                                    // Limpiar el formulario después del registro
-                                    _formKey.currentState?.reset();
-                                    _firstNameController.clear();
-                                    _lastNameController.clear();
-                                    _userController.clear();
-                                    _passController.clear();
-                                    _emailController.clear();
-                                  } catch (e) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text('Error: $e')),
-                                    );
-                                  } finally {
-                                    setState(() => _isLoading = false);
-                                  }
-                                }
-                              },
+                      onPressed: _register,
                       style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
                         backgroundColor: Colors.yellow,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
                         side: const BorderSide(color: Colors.blueAccent),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        disabledBackgroundColor: Colors.green,
                       ),
-                      child:
-                          _isLoading
-                              ? const CircularProgressIndicator(
-                                color: Colors.yellow,
-                              )
-                              : const Text(
-                                'Crear Usuario',
-                                style: TextStyle(fontSize: 18),
-                              ),
+                      child: const Text(
+                        'Registrar',
+                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      ),
                     ),
                   ),
                 ],
@@ -214,15 +187,5 @@ class _CreateUserPageState extends State<CreateUserPage> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _firstNameController.dispose();
-    _lastNameController.dispose();
-    _userController.dispose();
-    _passController.dispose();
-    _emailController.dispose();
-    super.dispose();
   }
 }

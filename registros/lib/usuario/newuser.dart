@@ -1,10 +1,10 @@
 class AuthManager {
   // Lista de usuarios registrados (en memoria)
   static final List<Map<String, String>> _users = [
-    {'user': 'admin', 'password': '1234'}, // Ejemplo inicial
+    {'user': 'admin', 'password': '1234'},
   ];
 
-  // Método para registrar nuevo usuario
+  // Registrar nuevo usuario
   static bool registerUser({
     required String firstName,
     required String lastName,
@@ -12,26 +12,26 @@ class AuthManager {
     required String password,
     required String email,
   }) {
-    // Validar si el usuario ya existe
     if (_users.any((u) => u['user'] == user)) {
-      return false; // Usuario ya existe
+      return false;
     }
 
-    users.add({
+    _users.add({
       'firstName': firstName,
       'lastName': lastName,
       'user': user,
-      'password': password, // ¡En producción usa encriptación!
+      'password': password,
       'email': email,
     });
+
     return true;
   }
 
-  // Método para validar login
+  // Validar login
   static bool validateLogin(String user, String password) {
     return _users.any((u) => u['user'] == user && u['password'] == password);
   }
 
-  // Obtener todos los usuarios (opcional)
+  // Obtener lista (opcional)
   static List<Map<String, String>> get users => _users;
 }
