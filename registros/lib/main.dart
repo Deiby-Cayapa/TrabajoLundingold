@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/template/menu.dart';
 import 'package:flutter_application_1/usuario/usuario.dart';
+import 'package:flutter_application_1/usuario/newuser.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,42 +27,40 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  bool _obscurePassword = true;
   final _formKey = GlobalKey<FormState>();
   final _userController = TextEditingController();
   final _passController = TextEditingController();
+  bool _obscurePassword = true;
 
-  void _login() async {
-    if (_obscurePassword) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const MenuPage()),
-      );
-    } else {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Credenciales incorrectas')));
+  void _login() {
+    if (_formKey.currentState!.validate()) {
+      final user = _userController.text.trim();
+      final pass = _passController.text.trim();
+
+      if (AuthManager.validateLogin(user, pass)) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MenuPage()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Credenciales incorrectas')),
+        );
+      }
     }
-  }
-
-  void _goToCreateUser() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const CreateUserPage()),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue, // Fondo azul en toda la pantalla
+      backgroundColor: Colors.blue,
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
           child: Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: Colors.yellow, // Cuadro de login en amarillo
+              color: Colors.yellow,
               borderRadius: BorderRadius.circular(20),
               boxShadow: const [
                 BoxShadow(
@@ -97,8 +96,12 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    validator:
-                        (value) => value!.isEmpty ? 'Ingrese su usuario' : null,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Ingrese su usuario';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 20),
                   TextFormField(
@@ -113,18 +116,22 @@ class _LoginPageState extends State<LoginPage> {
                               ? Icons.visibility
                               : Icons.visibility_off,
                         ),
-                        onPressed:
-                            () => setState(
-                              () => _obscurePassword = !_obscurePassword,
-                            ),
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    validator:
-                        (value) =>
-                            value!.isEmpty ? 'Ingrese su contraseña' : null,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Ingrese su contraseña';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 30),
                   SizedBox(
@@ -133,40 +140,46 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: _login,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 14),
-                        side: const BorderSide(color: Colors.blueAccent),
                         backgroundColor: Colors.yellow,
+                        side: const BorderSide(
+                          color: Colors.blueAccent,
+                        ), // ✅ BORDE AZUL
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
                       child: const Text(
                         'Entrar',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
-                        ), // Texto en negro
+                        style: TextStyle(fontSize: 16, color: Colors.black),
                       ),
                     ),
                   ),
+
                   const SizedBox(height: 15),
-                  // Botón "Crear usuario"
+
                   SizedBox(
                     width: double.infinity,
                     child: OutlinedButton(
-                      onPressed: _goToCreateUser,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RegisterPage(),
+                          ),
+                        );
+                      },
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 14),
-                        side: const BorderSide(color: Colors.blueAccent),
+                        side: const BorderSide(
+                          color: Colors.blueAccent,
+                        ), // ✅ BORDE AZUL IGUAL
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
                       child: const Text(
-                        'Crear un usuario',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black, // Texto en negro
-                        ),
+                        'Crear Usuario',
+                        style: TextStyle(fontSize: 16, color: Colors.black),
                       ),
                     ),
                   ),
