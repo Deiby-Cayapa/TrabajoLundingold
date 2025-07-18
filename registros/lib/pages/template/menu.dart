@@ -3,7 +3,7 @@ import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/pages/portal_Norte/piscinas.dart';
 import 'package:flutter_application_1/pages/portal_Norte/dragflow.dart';
 import 'package:flutter_application_1/pages/portal_Norte/mudwizard.dart';
-import 'package:flutter_application_1/pages/portal_Norte/plantaTratamiento.dart';
+import 'package:flutter_application_1/pages/portal_Norte/planta_Tratamiento.dart';
 import 'package:flutter_application_1/pages/portal_Norte/polishing.dart';
 import 'package:flutter_application_1/pages/portal_Norte/tsf.dart';
 import 'package:flutter_application_1/pages/portal_Sur/ingreso.dart';
@@ -104,7 +104,7 @@ class MenuPage extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const MudwizardPage(),
+                                builder: (context) => const MudWizardPage(),
                               ),
                             );
                           },
@@ -123,7 +123,7 @@ class MenuPage extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                 builder:
-                                    (context) => const PlantatratamientoPage(),
+                                    (context) => const PlantaTratamientoPage(),
                               ),
                             );
                           },
