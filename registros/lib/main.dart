@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/template/menu.dart';
 import 'package:flutter_application_1/usuario/usuario.dart';
-import 'package:flutter_application_1/usuario/newuser.dart';
+import 'package:flutter_application_1/service/auth.service.dart'; // Asegúrate de importar correctamente
+import 'dart:convert';
 
 void main() {
   runApp(const MyApp());
@@ -27,46 +28,72 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  bool _obscurePassword = true;
   final _formKey = GlobalKey<FormState>();
   final _userController = TextEditingController();
   final _passController = TextEditingController();
-  bool _obscurePassword = true;
 
-  void _login() {
+  void _login() async {
     if (_formKey.currentState!.validate()) {
-      final user = _userController.text.trim();
-      final pass = _passController.text.trim();
+      final username = _userController.text.trim();
+      final password = _passController.text.trim();
 
-      if (AuthManager.validateLogin(user, pass)) {
+      final response = await AuthService.login(username, password);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final accessToken = data['access'];
+
+        // Aquí podrías guardar el token con SharedPreferences o pasarlo a otra pantalla
+
+        // Éxito: redirigir
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const MenuPage()),
         );
       } else {
+        // Fallo: mostrar error
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Credenciales incorrectas')),
+          const SnackBar(content: Text('Usuario o contraseña incorrectos')),
         );
       }
     }
   }
 
+  void _goToCreateUser() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const CreateUserPage()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue,
+      backgroundColor: const Color.fromARGB(
+        255,
+        255,
+        255,
+        255,
+      ), // Fondo azul en toda la pantalla
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
           child: Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: Colors.yellow,
+              color: const Color.fromARGB(
+                255,
+                253,
+                254,
+                255,
+              ), // Cuadro de login en amarillo
               borderRadius: BorderRadius.circular(20),
               boxShadow: const [
                 BoxShadow(
-                  color: Colors.black26,
+                  color: Color.fromARGB(223, 56, 56, 56),
                   blurRadius: 10,
-                  offset: Offset(0, 5),
+                  offset: Offset(0, 8),
                 ),
               ],
             ),
@@ -79,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
                   const Icon(
                     Icons.lock_outline,
                     size: 60,
-                    color: Colors.blueAccent,
+                    color: Color.fromARGB(255, 0, 60, 255),
                   ),
                   const SizedBox(height: 10),
                   const Text(
@@ -96,12 +123,8 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Ingrese su usuario';
-                      }
-                      return null;
-                    },
+                    validator:
+                        (value) => value!.isEmpty ? 'Ingrese su usuario' : null,
                   ),
                   const SizedBox(height: 20),
                   TextFormField(
@@ -116,22 +139,18 @@ class _LoginPageState extends State<LoginPage> {
                               ? Icons.visibility
                               : Icons.visibility_off,
                         ),
-                        onPressed: () {
-                          setState(() {
-                            _obscurePassword = !_obscurePassword;
-                          });
-                        },
+                        onPressed:
+                            () => setState(
+                              () => _obscurePassword = !_obscurePassword,
+                            ),
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Ingrese su contraseña';
-                      }
-                      return null;
-                    },
+                    validator:
+                        (value) =>
+                            value!.isEmpty ? 'Ingrese su contraseña' : null,
                   ),
                   const SizedBox(height: 30),
                   SizedBox(
@@ -140,46 +159,49 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: _login,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 14),
-                        backgroundColor: Colors.yellow,
                         side: const BorderSide(
-                          color: Colors.blueAccent,
-                        ), // ✅ BORDE AZUL
+                          color: Color.fromARGB(255, 0, 128, 192),
+                        ),
+                        backgroundColor: const Color.fromARGB(255, 0, 79, 216),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
                       child: const Text(
-                        'Entrar',
-                        style: TextStyle(fontSize: 16, color: Colors.black),
+                        'Iniciar Sesión',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Color.fromARGB(255, 255, 255, 255),
+                        ), // Texto en negro
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 15),
-
+                  // Botón "Crear usuario"
                   SizedBox(
                     width: double.infinity,
                     child: OutlinedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const RegisterPage(),
-                          ),
-                        );
-                      },
+                      onPressed: _goToCreateUser,
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         side: const BorderSide(
-                          color: Colors.blueAccent,
-                        ), // ✅ BORDE AZUL IGUAL
+                          color: Color.fromARGB(255, 0, 13, 255),
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
                       child: const Text(
-                        'Crear Usuario',
-                        style: TextStyle(fontSize: 16, color: Colors.black),
+                        'Crear un usuario',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Color.fromARGB(
+                            255,
+                            0,
+                            25,
+                            211,
+                          ), // Texto en negro
+                        ),
                       ),
                     ),
                   ),
