@@ -3,7 +3,7 @@ import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/pages/portal_Norte/dragflow.dart';
 import 'package:flutter_application_1/pages/portal_Norte/mudwizard.dart';
 import 'package:flutter_application_1/pages/portal_Norte/piscinas.dart';
-import 'package:flutter_application_1/pages/portal_Norte/plantaTratamiento.dart';
+import 'package:flutter_application_1/pages/portal_Norte/planta_Tratamiento.dart';
 import 'package:flutter_application_1/pages/portal_Norte/polishing.dart';
 import 'package:flutter_application_1/pages/portal_Norte/tsf.dart';
 import 'package:flutter_application_1/pages/portal_Sur/agua_tratada.dart';
@@ -56,14 +56,14 @@ class AppMenuDrawer extends StatelessWidget {
                       _buildNavTile(
                         context,
                         "MudWizard",
-                        MudwizardPage(),
+                        MudWizardPage(),
                         selectedPage == "MudWizard",
                       ),
                       _buildNavTile(
                         context,
                         "Planta de Tratamiento",
-                        PlantatratamientoPage(),
-                        selectedPage == "Planta",
+                        PlantaTratamientoPage(),
+                        selectedPage == "Planta de Tratamiento",
                       ),
                       _buildNavTile(
                         context,
@@ -138,7 +138,7 @@ class AppMenuDrawer extends StatelessWidget {
                               title: const Text(
                                 "¿Desea cerrar sesión?",
                                 style: TextStyle(
-                                  color: Color.fromARGB(255, 0, 126, 157),
+                                  color: Color.fromARGB(255, 247, 255, 8),
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
                                 ),
