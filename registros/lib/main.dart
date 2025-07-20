@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/template/menu.dart';
 import 'package:flutter_application_1/usuario/usuario.dart';
+import 'package:flutter_application_1/service/auth.service.dart'; // Asegúrate de importar correctamente
+import 'dart:convert';
 
 void main() {
   runApp(const MyApp());
@@ -32,15 +34,29 @@ class _LoginPageState extends State<LoginPage> {
   final _passController = TextEditingController();
 
   void _login() async {
-    if (_obscurePassword) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const MenuPage()),
-      );
-    } else {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Credenciales incorrectas')));
+    if (_formKey.currentState!.validate()) {
+      final username = _userController.text.trim();
+      final password = _passController.text.trim();
+
+      final response = await AuthService.login(username, password);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final accessToken = data['access'];
+
+        // Aquí podrías guardar el token con SharedPreferences o pasarlo a otra pantalla
+
+        // Éxito: redirigir
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MenuPage()),
+        );
+      } else {
+        // Fallo: mostrar error
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Usuario o contraseña incorrectos')),
+        );
+      }
     }
   }
 
@@ -54,20 +70,30 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue, // Fondo azul en toda la pantalla
+      backgroundColor: const Color.fromARGB(
+        255,
+        255,
+        255,
+        255,
+      ), // Fondo azul en toda la pantalla
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
           child: Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: Colors.yellow, // Cuadro de login en amarillo
+              color: const Color.fromARGB(
+                255,
+                253,
+                254,
+                255,
+              ), // Cuadro de login en amarillo
               borderRadius: BorderRadius.circular(20),
               boxShadow: const [
                 BoxShadow(
-                  color: Colors.black26,
+                  color: Color.fromARGB(223, 56, 56, 56),
                   blurRadius: 10,
-                  offset: Offset(0, 5),
+                  offset: Offset(0, 8),
                 ),
               ],
             ),
@@ -80,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
                   const Icon(
                     Icons.lock_outline,
                     size: 60,
-                    color: Colors.blueAccent,
+                    color: Color.fromARGB(255, 0, 60, 255),
                   ),
                   const SizedBox(height: 10),
                   const Text(
@@ -133,17 +159,19 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: _login,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 14),
-                        side: const BorderSide(color: Colors.blueAccent),
-                        backgroundColor: Colors.yellow,
+                        side: const BorderSide(
+                          color: Color.fromARGB(255, 0, 128, 192),
+                        ),
+                        backgroundColor: const Color.fromARGB(255, 0, 79, 216),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
                       child: const Text(
-                        'Entrar',
+                        'Iniciar Sesión',
                         style: TextStyle(
                           fontSize: 16,
-                          color: Colors.black,
+                          color: Color.fromARGB(255, 255, 255, 255),
                         ), // Texto en negro
                       ),
                     ),
@@ -156,7 +184,9 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: _goToCreateUser,
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 14),
-                        side: const BorderSide(color: Colors.blueAccent),
+                        side: const BorderSide(
+                          color: Color.fromARGB(255, 0, 13, 255),
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -165,7 +195,12 @@ class _LoginPageState extends State<LoginPage> {
                         'Crear un usuario',
                         style: TextStyle(
                           fontSize: 16,
-                          color: Colors.black, // Texto en negro
+                          color: Color.fromARGB(
+                            255,
+                            0,
+                            25,
+                            211,
+                          ), // Texto en negro
                         ),
                       ),
                     ),

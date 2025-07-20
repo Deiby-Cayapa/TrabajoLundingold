@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/service/auth.service.dart'; // Asegúrate de importar correctamente
+import 'dart:convert';
 
 class CreateUserPage extends StatefulWidget {
   const CreateUserPage({super.key});
@@ -20,22 +23,22 @@ class _CreateUserPageState extends State<CreateUserPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Crear Usuario'),
-        backgroundColor: Colors.blue,
-      ),
-      backgroundColor: Colors.blue,
+      // appBar: AppBar(
+      //   title: const Text('Crear Usuario'),
+      //   backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      // ),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
           child: Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: Colors.yellow,
+              color: const Color.fromARGB(255, 255, 255, 255),
               borderRadius: BorderRadius.circular(20),
               boxShadow: const [
                 BoxShadow(
-                  color: Colors.black26,
+                  color: Color.fromARGB(148, 0, 0, 0),
                   blurRadius: 10,
                   offset: Offset(0, 5),
                 ),
@@ -157,27 +160,39 @@ class _CreateUserPageState extends State<CreateUserPage> {
                                     false) {
                                   setState(() => _isLoading = true);
                                   try {
-                                    // Simulamos un proceso de registro
-                                    await Future.delayed(
-                                      const Duration(seconds: 2),
+                                    final response = await AuthService.register(
+                                      _userController.text,
+                                      _emailController.text,
+                                      _passController.text,
+                                      firstName: _firstNameController.text,
+                                      lastName: _lastNameController.text,
                                     );
 
-                                    // Aquí iría tu lógica real de registro:
-                                    // await AuthService.registrarUsuario(
-                                    //   _firstNameController.text,
-                                    //   _lastNameController.text,
-                                    //   _userController.text,
-                                    //   _passController.text,
-                                    //   _emailController.text,
-                                    // );
-
-                                    // Limpiar el formulario después del registro
-                                    _formKey.currentState?.reset();
-                                    _firstNameController.clear();
-                                    _lastNameController.clear();
-                                    _userController.clear();
-                                    _passController.clear();
-                                    _emailController.clear();
+                                    if (response.statusCode == 201 ||
+                                        response.statusCode == 200) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            'Usuario creado exitosamente',
+                                          ),
+                                        ),
+                                      );
+                                      Navigator.pop(context); // Vuelve al login
+                                    } else {
+                                      final data = jsonDecode(response.body);
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            data['detail'] ??
+                                                'Error al registrar usuario',
+                                          ),
+                                        ),
+                                      );
+                                    }
                                   } catch (e) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(content: Text('Error: $e')),
@@ -188,23 +203,47 @@ class _CreateUserPageState extends State<CreateUserPage> {
                                 }
                               },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.yellow,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        side: const BorderSide(color: Colors.blueAccent),
+                        backgroundColor: const Color.fromARGB(255, 0, 79, 216),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        side: const BorderSide(
+                          color: Color.fromARGB(255, 0, 74, 203),
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        disabledBackgroundColor: Colors.green,
+                        disabledBackgroundColor: const Color.fromARGB(
+                          255,
+                          135,
+                          160,
+                          235,
+                        ),
                       ),
                       child:
                           _isLoading
                               ? const CircularProgressIndicator(
-                                color: Colors.yellow,
+                                color: Color.fromARGB(255, 59, 108, 255),
                               )
                               : const Text(
                                 'Crear Usuario',
-                                style: TextStyle(fontSize: 18),
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
                               ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginPage(),
+                        ),
+                      );
+                    },
+                    child: Text('¿Ya tienes cuenta? Inicia sesión'),
+                    style: TextButton.styleFrom(
+                      foregroundColor: const Color.fromARGB(255, 0, 56, 223),
                     ),
                   ),
                 ],
